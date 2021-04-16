@@ -1,39 +1,64 @@
+const bcryptjs = require('bcryptjs')
 
-const getUsers = (req, res) => {
+const User = require('../models/user')
+
+const getUsers = async (req, res) => {
     
-    const { q } = req.query
+    const { skip = 0, limit = 5 } = req.query
+    const query = { status: true }
+
+    const [ total, users ] = await Promise.all([
+        User.countDocuments(query),
+        User.find(query).skip(Number(skip)).limit(Number(limit))
+    ])
 
     res.json({
-        msg: 'get API',
-        q
+        total,
+        users
     })
+
 }
 
-const putUsers = (req, res) => {
+const putUsers = async (req, res) => {
     
+    const { id } = req.params
+    const { _id, password, google, email, ...user } = req.body
+
+    if (password) {
+        const salt = bcryptjs.genSaltSync()
+        user.password = bcryptjs.hashSync(password, salt)
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(id, user, { new: true })
+
+    res.json(updatedUser)
+
+}
+
+const postUsers = async (req, res) => {
+
+    const { name, email, password, role } = req.body
+    const user = new User( { name, email, password, role } )
+
+    const salt = bcryptjs.genSaltSync()
+    user.password = bcryptjs.hashSync(password, salt)
+
+    await user.save()
+
+    res.json({
+        user
+    })
+
+}
+
+const deleteUsers = async (req, res) => {
+
     const { id } = req.params;
-
-    res.json({
-        msg: 'put API',
-        id
-    })
-}
-
-const postUsers = (req, res) => {
     
-    const { name, age } = req.body
+    const user = await User.findByIdAndUpdate(id, { status: false }, { new: true })
 
-    res.json({
-        msg: 'post API',
-        name,
-        age
-    })
-}
+    res.json(user)
 
-const deleteUsers = (req, res) => {
-    res.json({
-        msg: 'delete API'
-    })
 }
 
 const patchUsers = (req, res) => {
