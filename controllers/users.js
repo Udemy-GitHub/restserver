@@ -52,12 +52,14 @@ const postUsers = async (req, res) => {
 }
 
 const deleteUsers = async (req, res) => {
-
-    const { id } = req.params;
+    
+    const { id } = req.params
     
     const user = await User.findByIdAndUpdate(id, { status: false }, { new: true })
 
-    res.json(user)
+    res.json({
+        user
+    })
 
 }
 
