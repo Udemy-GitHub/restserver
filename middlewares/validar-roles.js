@@ -1,5 +1,3 @@
-
-
 const adminRoleValidation = (req, res, next) => {
 
     if (!req.user) {
