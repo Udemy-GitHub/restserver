@@ -3,7 +3,7 @@ const { check } = require('express-validator')
 
 const {
     jwtValidation,
-    validarCampos,
+    validateFields,
     adminRoleValidation
 } = require('../middlewares')
 
@@ -22,7 +22,7 @@ router.get('/', getProducts)
 router.get('/:id', [
     check('id', 'No es un ID válido').isMongoId(),
     check('id').custom(idProductValidation),
-    validarCampos
+    validateFields
 ], getProduct)
 
 router.put('/:id', [
@@ -36,7 +36,7 @@ router.put('/:id', [
     check('category', 'No es un ID válido').optional().isMongoId(),
     check('category').optional().custom(idCategoryValidation),
     check('price').optional().isFloat({ gt: 0 }),
-    validarCampos
+    validateFields
 ], putProducts)
 
 router.post('/',[
@@ -45,7 +45,7 @@ router.post('/',[
     check('category', 'La categoría es obligatoria').not().isEmpty(),
     check('category', 'No es un ID válido').isMongoId(),
     check('category').custom(idCategoryValidation),
-    validarCampos
+    validateFields
 ], postProducts)
 
 router.delete('/:id', [
@@ -53,7 +53,7 @@ router.delete('/:id', [
     adminRoleValidation,
     check('id', 'No es un ID válido').isMongoId(),
     check('id').custom(idProductValidation),
-    validarCampos
+    validateFields
 ], deleteProducts)
 
 module.exports = router

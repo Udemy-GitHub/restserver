@@ -3,12 +3,12 @@ const { check } = require('express-validator')
 
 // const { jwtValidation } = require('../middlewares/validar-jwt')
 // const { adminRoleValidation, rolesValidation } = require('../middlewares/validar-roles')
-// const { validarCampos } = require('../middlewares/validar-campos')
+// const { validateFields } = require('../middlewares/validar-campos')
 const {
     jwtValidation,
     adminRoleValidation,
     rolesValidation,
-    validarCampos
+    validateFields
 } = require('../middlewares')
 
 
@@ -28,7 +28,7 @@ router.put('/:id', [
     check('id', 'No es un ID válido').isMongoId(),
     check('id').custom(idValidation),
     check('role').custom(roleValidation),
-    validarCampos
+    validateFields
 ], putUsers)
 
 router.post('/',[
@@ -38,7 +38,7 @@ router.post('/',[
     check('password', 'La contraseña debe tener más de 6 letras').isLength({ min: 6 }),
     // check('role', 'No es un rol válido').isIn(['ADMIN_ROLE', 'USER_ROLE']),
     check('role').custom(roleValidation),
-    validarCampos
+    validateFields
 ], postUsers)
 
 router.delete('/:id', [
@@ -47,7 +47,7 @@ router.delete('/:id', [
     rolesValidation('ADMIN_ROLE', 'SALES_ROLE'),
     check('id', 'No es un ID válido').isMongoId(),
     check('id').custom(idValidation),
-    validarCampos
+    validateFields
 ], deleteUsers)
 
 router.patch('/', patchUsers)

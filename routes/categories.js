@@ -3,7 +3,7 @@ const { check } = require('express-validator')
 
 const {
     jwtValidation,
-    validarCampos,
+    validateFields,
     adminRoleValidation
 } = require('../middlewares')
 
@@ -22,7 +22,7 @@ router.get('/', getCategories)
 router.get('/:id', [
     check('id', 'No es un ID válido').isMongoId(),
     check('id').custom(idCategoryValidation),
-    validarCampos
+    validateFields
 ], getCategory)
 
 router.put('/:id', [
@@ -30,13 +30,13 @@ router.put('/:id', [
     check('id', 'No es un ID válido').isMongoId(),
     check('id').custom(idCategoryValidation),
     check('name', 'El nombre es obligatorio').not().isEmpty(),
-    validarCampos
+    validateFields
 ], putCategories)
 
 router.post('/',[
     jwtValidation,
     check('name', 'El nombre es obligatorio').not().isEmpty(),
-    validarCampos
+    validateFields
 ], postCategories)
 
 router.delete('/:id', [
@@ -44,7 +44,7 @@ router.delete('/:id', [
     adminRoleValidation,
     check('id', 'No es un ID válido').isMongoId(),
     check('id').custom(idCategoryValidation),
-    validarCampos
+    validateFields
 ], deleteCategories)
 
 module.exports = router

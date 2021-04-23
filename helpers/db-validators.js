@@ -50,10 +50,57 @@ const idProductValidation = async (id) => {
 
 }
 
+const collectionValidation = (collection = '', collections = []) => {
+
+    const collectionExists = collections.includes(collection)
+
+    if (!collectionExists) {
+        throw new Error(`La colección ${collection} no es permitida. Consulte las colecciones permitidas: ${collections}`)
+    }
+
+    return true
+
+}
+
+const documentValidation = async (collection = '', id = '') => {
+
+    let model;
+
+    switch (collection) {
+        case 'products':
+        
+            model = await Product.findById(id)
+
+            if (!model) {
+                throw (`No existe un producto con el id ${id}`)
+                
+            }
+
+            break
+        case 'users':
+
+            model = await User.findById(id)
+
+            if (!model) {
+                throw (`No existe un usuario con el id ${id}`)
+            }
+
+            break
+        default:
+            throw ('Se me olvidó validar esto')
+
+    }
+
+    return model
+
+}
+
 module.exports = {
     roleValidation,
     emailValidation,
     idValidation,
     idCategoryValidation,
-    idProductValidation
+    idProductValidation,
+    collectionValidation,
+    documentValidation
 }
